@@ -19,24 +19,8 @@ RUN mkdir /etc/nginx/ssl
 RUN cp myapp.key /etc/nginx/ssl
 RUN cp myapp.crt /etc/nginx/ssl
 RUN ls -l /etc/nginx/ssl
-RUN mkdir html
+# RUN mkdir html
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY oxer-html ./html/
-
-
-RUN ls -l 
-
-
-
-
-
-
-# RUN cat /etc/nginx/nginx.conf
 
 CMD [ "nginx","-g", "daemon off;" ]
 
-
-
-
-# apt-get install openssl

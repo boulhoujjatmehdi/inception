@@ -1,29 +1,22 @@
-
-
-
 FROM debian:11
 
-RUN apt-get update
-# testing 
-RUN apt-get install -y nginx
-RUN service nginx start
-RUN apt-get install -y php php-mysql php-fpm php-curl php-gd php-intl php-mbstring php-soap php-xml php-xmlrpc php-zip mariadb-server mariadb-client
-RUN service mariadb start
-RUN service php7.4-fpm start
+RUN apt-get update && apt-get install -y \
+    php-fpm \
+    php-mysql \
+    wget \
+    unzip
 
+WORKDIR /tmp
 
+RUN wget https://wordpress.org/latest.zip 
+RUN unzip latest.zip 
+RUN rm latest.zip 
+RUN chown -R www-data:www-data /tmp/wordpress
 
+# Create the /run/php directory
+RUN mkdir -p /run/php
 
-# RUN apt-get install -y wget
-# RUN wget -O /tmp/wordpress.tar.gz https://wordpress.org/latest.tar.gz
-# # RUN mkdir /var/www
-# # RUN mkdir /var/www/html
-# RUN tar -xzvf /tmp/wordpress.tar.gz -C /var/www/html
-# RUN chown -R www-data.www-data /var/www/html/wordpress
-# RUN chmod -R 755 /var/www/html/wordpress
+RUN sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf
+EXPOSE 9000
 
-
-# RUN apt-get install php php-fpm
-
-
-CMD ["tail", "-f", "/dev/null"]
+CMD cp -r /tmp/wordpress/* /var/www/html && php-fpm7.4 -F
