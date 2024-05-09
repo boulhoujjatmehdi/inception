@@ -1,16 +1,48 @@
 
 version: '3'
 services:
+  mariadb:
+    build: 
+      context: ./srcs/requirements/mariadb
+    environment:
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+      DB_ROOT: ${MYSQL_ROOT_PASSWORD}
+    container_name: mariadb
+    ports:
+    - "3306:3306"
+    restart: always
+
   wordpress:
     build: ./srcs/requirements/wordpress
+    container_name: wordpress
     volumes:
-      - ./wordpress:/var/www/html
+      - wordpress:/var/www/html
+      # - ./srcs/requirements/wordpress/wp-config.php:/var/www/html/wp-config.php
+      - ./srcs/requirements/wordpress/mariadb_script.sh:/tmp/mariadb_script.sh
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST}
+    depends_on:
+      - mariadb
+    restart: always
+
   nginx:
     build: ./srcs/requirements/nginx
+    container_name: nginx
     volumes:
-      - /home/mehdi/Desktop/srcs/requirements/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./wordpress:/var/www/html
+      - ./srcs/requirements/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - wordpress:/var/www/html
+      # - ./srcs/requirements/wordpress/wp-config.php:/var/www/html/wp-config.php
     ports:
       - 8008:8089
     depends_on:
       - wordpress
+    restart: always
+volumes:
+  wordpress:
+  db:
+  db_data:

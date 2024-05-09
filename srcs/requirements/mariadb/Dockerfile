@@ -1,15 +1,18 @@
-
-
+# Dockerfile
 FROM debian:11
 
+# Install MariaDB
+RUN apt-get update && apt-get install -y mariadb-server
 
-WORKDIR /home
+# Copy the database initialization script
+COPY create_db.sql /tmp/create_db.sql
 
-RUN apt-get update
-RUN apt-get install -y mariadb-server mariadb-client
+# Copy the database startup script
+COPY init.sh /tmp/init.sh
+RUN chmod +x /tmp/init.sh
 
+# Expose the MariaDB port
+EXPOSE 3306
 
-# COPY init.sh /home/init.sh
-# RUN chmod +x /home/init.sh
-
-CMD ["/home/init.sh"]
+# Start MariaDB
+CMD ["/tmp/init.sh"]

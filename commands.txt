@@ -1,4 +1,0 @@
-clear all images
-    sudo docker rmi -f $(sudo docker images -q)
-stop all processes
-    sudo docker stop $(sudo docker ps -q) ; sudo docker container prune 
