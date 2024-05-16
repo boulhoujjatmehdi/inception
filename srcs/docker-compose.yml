@@ -10,6 +10,10 @@ services:
       DB_PASS: ${MYSQL_PASSWORD}
       DB_ROOT: ${MYSQL_ROOT_PASSWORD}
     container_name: mariadb
+    volumes:
+      - DB:/var/lib/mysql
+    networks:
+      - inception
     ports:
     - "3306:3306"
     restart: always
@@ -18,14 +22,23 @@ services:
     build: ./srcs/requirements/wordpress
     container_name: wordpress
     volumes:
-      - wordpress:/var/www/html
+      - Wordpress:/var/www/html
       # - ./srcs/requirements/wordpress/wp-config.php:/var/www/html/wp-config.php
       - ./srcs/requirements/wordpress/mariadb_script.sh:/tmp/mariadb_script.sh
+    networks:
+      - inception
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_EMAIL=${MYSQL_EMAIL}
+      - WORDPRESS_HOST=${WORDPRESS_HOST}
+
+      - SEC_USER_USER=${SEC_USER_USER}
+      - SEC_USER_PASS=${SEC_USER_PASS}
+      - SEC_USER_ROLE=${SEC_USER_ROLE}
+      - SEC_USER_MAIL=${SEC_USER_MAIL}
     depends_on:
       - mariadb
     restart: always
@@ -33,16 +46,34 @@ services:
   nginx:
     build: ./srcs/requirements/nginx
     container_name: nginx
+    networks:
+      - inception
     volumes:
       - ./srcs/requirements/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - wordpress:/var/www/html
+      - Wordpress:/var/www/html
       # - ./srcs/requirements/wordpress/wp-config.php:/var/www/html/wp-config.php
     ports:
       - 8008:8089
+      - 443:443
     depends_on:
       - wordpress
     restart: always
+
+
+networks:
+  inception:
+
+
 volumes:
-  wordpress:
-  db:
-  db_data:
+  Wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/mehdi/data/Wordpress
+  DB:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/mehdi/data/DB

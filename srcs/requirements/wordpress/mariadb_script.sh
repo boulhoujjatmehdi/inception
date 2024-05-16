@@ -1,29 +1,35 @@
 #!/bin/bash
 
-# Set the filename
-filename="/var/www/html/wp-config.php"
+sleep 3
+echo "setting database in wordpressa"
+mkdir -p /run/php
+if [ ! -f /var/www/html/wp-config.php ]
+then
+    echo "setting up wp-cli"
+    cd /var/www/html/
+    pwd 
 
-# Write the PHP code to the file
-cat << EOF > $filename
-<?php
-define( 'WP_DEBUG', true );
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    chmod +x wp-cli.phar
+    mv wp-cli.phar /usr/local/bin/wp
 
-/* Add any custom values between this line and the "stop editing" line. */
+    wp --allow-root --path=/var/www/html config create \
+     --dbname=$MYSQL_DATABASE \
+     --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD \
+     --dbhost=$MYSQL_HOST
 
-define('DB_NAME', '$MYSQL_DATABASE');
-define('DB_USER', '$MYSQL_USER');
-define('DB_PASSWORD', '$MYSQL_PASSWORD');
-define('DB_HOST', '$MYSQL_HOST');
-\$table_prefix = 'wp_';
-/* That's all, stop editing! Happy publishing. */
-
-/** Absolute path to the WordPress directory. */
-if ( ! defined( 'ABSPATH' ) ) {
-    define( 'ABSPATH', __DIR__ . '/' );
-}
-
-/** Sets up WordPress vars and included files. */
-require_once ABSPATH . 'wp-settings.php';
-
-?>
-EOF
+    wp --allow-root --path=/var/www/html core install \
+    --url=$WORDPRESS_HOST \
+    --title="Title" \
+    --admin_user=$MYSQL_USER \
+    --admin_password=$MYSQL_PASSWORD \
+    --admin_email=$MYSQL_EMAIL
+    
+    wp --allow-root --path=/var/www/html user create\
+    $SEC_USER_USER \
+    $SEC_USER_MAIL \
+    --role=$SEC_USER_ROLE \
+    --user_pass=$SEC_USER_PASS
+    
+    echo "end"
+fi
