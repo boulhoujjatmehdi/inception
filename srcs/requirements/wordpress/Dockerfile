@@ -16,17 +16,13 @@ RUN unzip latest.zip
 RUN rm latest.zip 
 RUN chown -R www-data:www-data /tmp/wordpress
 
-# Create the /run/php directory necessary for the pid file
-# RUN mkdir -p /run/php
-
 RUN sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 0.0.0.0:9000/' /etc/php/7.4/fpm/pool.d/www.conf
-# EXPOSE 9000
 
-# mariadb script
-#  chmod +x /tmp/mariadb_script.sh
-# RUN /tmp/mariadb_script.sh
+COPY /tools/mariadb_script.sh /tmp/mariadb_script.sh
 
-CMD chmod +x /tmp/mariadb_script.sh && \
-    cp -r /tmp/wordpress/* /var/www/html && \ 
-    /tmp/mariadb_script.sh && \
-    php-fpm7.4 -F
+RUN chmod +x /tmp/mariadb_script.sh
+RUN mkdir -p /var/www/html
+RUN cp -r /tmp/wordpress/* /var/www/html
+RUN mkdir /run/php
+
+CMD   /tmp/mariadb_script.sh && php-fpm7.4 -F

@@ -8,10 +8,11 @@ RUN apt-get update && apt-get install -y mariadb-server
 RUN apt-get install curl vim iputils-ping -y
 
 # Copy the database initialization script
-COPY create_db.sql /tmp/create_db.sql
+COPY ./tools/create_db.sql /tmp/create_db.sql
 
 # Copy the database startup script
-COPY init.sh /tmp/init.sh
+COPY ./tools/init.sh /tmp/init.sh
+
 RUN chmod +x /tmp/init.sh
 
 # Expose the MariaDB port
