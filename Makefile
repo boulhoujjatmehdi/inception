@@ -1,12 +1,14 @@
 path = /home/mehdi/Desktop/srcs/docker-compose.yml
+VOLUMES_PATH = /home/mehdi/data
+
 
 
 all:build-d
 
-build:
+build: c_volumes
 	docker-compose -f $(path) up --build
 
-build-d:
+build-d: c_volumes
 	docker-compose -f $(path) up --build -d
 
 up:
@@ -21,7 +23,7 @@ clean:
 cache: down clean
 	docker-compose -f $(path) build --no-cache
 
-re:  down clean  build
+re: clean  down  build
 
 re-d:  down clean  build-d 
 
@@ -34,3 +36,6 @@ wordpress:
 	docker exec -it wordpress bash
 nginx:
 	docker exec -it nginx bash
+
+c_volumes:
+	mkdir -p $(VOLUMES_PATH)/DB $(VOLUMES_PATH)/Wordpress
