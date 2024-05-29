@@ -8,9 +8,9 @@ chown -R mysql:mysql /run/mysqld/
 sed -i 's/127.0.0.1/0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # execute the sql script create_db.sql
-mariadbd --user=root --bootstrap < /tmp/create_db.sql
+mariadbd  --bootstrap < /tmp/create_db.sql
 
 # start mariadb 
-mariadbd --user=root
+exec mariadbd 
 
 

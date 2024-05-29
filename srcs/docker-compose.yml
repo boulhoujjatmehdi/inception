@@ -2,8 +2,9 @@
 version: '3'
 services:
   mariadb:
-    build: 
+    build:
       context: ./requirements/mariadb
+    image: mariadb
     environment:
       DB_NAME: ${MYSQL_DATABASE}
       DB_USER: ${MYSQL_USER}
@@ -14,8 +15,6 @@ services:
       - DB:/var/lib/mysql
     networks:
       - inception
-    # ports:
-    # - "3306:3306"
     restart: always
 
   wordpress:
@@ -62,10 +61,10 @@ networks:
 
 volumes:
   Wordpress:
-    driver: local
+    driver: local # 
     driver_opts:
-      type: none
-      o: bind
+      type: none # which filesystem is to be used
+      o: bind # we specify the access of the container and the host machine to this folder we can change it to read-only or read write
       device: /home/mehdi/data/Wordpress
   DB:
     driver: local

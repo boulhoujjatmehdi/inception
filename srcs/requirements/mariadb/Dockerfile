@@ -15,8 +15,10 @@ COPY ./tools/init.sh /tmp/init.sh
 
 RUN chmod +x /tmp/init.sh
 
-# Expose the MariaDB port
-# EXPOSE 3306
-
 # Start MariaDB
-CMD ["/tmp/init.sh"]
+CMD ["sh","/tmp/init.sh"]
+
+
+
+
+

@@ -20,6 +20,8 @@ down:
 clean:
 	sudo rm -rf /home/mehdi/data/*/*
 
+fclean: clean 
+	docker system prune -a -f
 cache: down clean
 	docker-compose -f $(path) build --no-cache
 

@@ -5,6 +5,7 @@ RUN apt-get install -y php-fpm
 RUN apt-get install -y php-mysql 
 RUN apt-get install -y wget 
 RUN apt-get install -y unzip
+# to debug
 RUN apt-get install curl -y
 RUN apt-get install vim -y
 
@@ -25,4 +26,4 @@ RUN mkdir -p /var/www/html
 RUN cp -r /tmp/wordpress/* /var/www/html
 RUN mkdir /run/php
 
-CMD   /tmp/mariadb_script.sh && php-fpm7.4 -F
+CMD   ["/tmp/mariadb_script.sh"]
