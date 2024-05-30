@@ -2,7 +2,7 @@
 FROM debian:11
 
 # Install MariaDB
-RUN apt-get update && apt-get install -y mariadb-server
+RUN apt-get update && apt-get install -y mariadb-server mariadb-client
 
 #for testing only
 RUN apt-get install curl vim iputils-ping -y

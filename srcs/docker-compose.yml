@@ -1,15 +1,12 @@
 
-version: '3'
 services:
   mariadb:
-    build:
-      context: ./requirements/mariadb
+    build : ./requirements/mariadb
     image: mariadb
     environment:
-      DB_NAME: ${MYSQL_DATABASE}
-      DB_USER: ${MYSQL_USER}
-      DB_PASS: ${MYSQL_PASSWORD}
-      DB_ROOT: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     container_name: mariadb
     volumes:
       - DB:/var/lib/mysql
@@ -20,8 +17,9 @@ services:
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
+    image : wordpress
     volumes:
-      - Wordpress:/var/www/html
+      - Wordpress:/var/www/html/
     networks:
       - inception
     environment:
@@ -30,6 +28,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_HOST=${MYSQL_HOST}
       - MYSQL_EMAIL=${MYSQL_EMAIL}
+
       - WORDPRESS_HOST=${WORDPRESS_HOST}
 
       - SEC_USER_USER=${SEC_USER_USER}
@@ -42,12 +41,14 @@ services:
 
   nginx:
     build: ./requirements/nginx
+    image : nginx
     container_name: nginx
+
     networks:
       - inception
     volumes:
       - ./requirements/nginx/tools/nginx.conf:/etc/nginx/nginx.conf
-      - Wordpress:/var/www/html
+      - Wordpress:/var/www/html/
     ports:
       - 443:443
     depends_on:

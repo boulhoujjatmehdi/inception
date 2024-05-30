@@ -1,8 +1,6 @@
 path = /home/mehdi/Desktop/srcs/docker-compose.yml
 VOLUMES_PATH = /home/mehdi/data
 
-
-
 all:build-d
 
 build: c_volumes
