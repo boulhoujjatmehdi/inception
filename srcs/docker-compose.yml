@@ -62,14 +62,14 @@ networks:
 
 volumes:
   Wordpress:
-    driver: local # 
+    driver: local
     driver_opts:
       type: none # which filesystem is to be used
       o: bind # we specify the access of the container and the host machine to this folder we can change it to read-only or read write
-      device: /home/mehdi/data/Wordpress
+      device: /home/eboulhou/data/Wordpress
   DB:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/mehdi/data/DB
+      device: /home/eboulhou/data/DB
